@@ -5,6 +5,12 @@ import 'package:netflix_api/core/colors/colors.dart';
 import 'package:netflix_api/core/constants.dart';
 import 'package:netflix_api/presentation/mainwidgets/app_bar_widget.dart';
 
+final imageList = [
+  'https://www.themoviedb.org/t/p/w220_and_h330_face/7gKI9hpEMcZUQpNgKrkDzJpbnNS.jpg',
+  'https://www.themoviedb.org/t/p/w220_and_h330_face/fiVW06jE7z9YnO4trhaMEdclSiC.jpg',
+  'https://www.themoviedb.org/t/p/w220_and_h330_face/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg',
+];
+
 class DownloadsScreen extends StatelessWidget {
   DownloadsScreen({super.key});
   final _widgetList = [
@@ -39,11 +45,7 @@ class DownloadsScreen extends StatelessWidget {
 
 class Section2 extends StatelessWidget {
   Section2({super.key});
-  final imageList = [
-    'https://www.themoviedb.org/t/p/w220_and_h330_face/7gKI9hpEMcZUQpNgKrkDzJpbnNS.jpg',
-    'https://www.themoviedb.org/t/p/w220_and_h330_face/fiVW06jE7z9YnO4trhaMEdclSiC.jpg',
-    'https://www.themoviedb.org/t/p/w220_and_h330_face/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg',
-  ];
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
