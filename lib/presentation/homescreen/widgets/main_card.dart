@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:netflix_api/presentation/search/widget/search_result_page.dart';
 
 class MainCardWidget extends StatelessWidget {
   final String HomeCardImg;

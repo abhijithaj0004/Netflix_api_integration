@@ -6,3 +6,4 @@ const kWidth = SizedBox(
 const kheight = SizedBox(
   height: 15,
 );
+const textHomeBar = TextStyle(fontWeight: FontWeight.bold);
