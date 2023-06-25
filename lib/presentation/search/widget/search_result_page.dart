@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:netflix_api/core/constants.dart';
 import 'package:netflix_api/core/strings.dart';
 import 'package:netflix_api/domain/models/searchImage/search_img_model/search_img_model.dart';
-import 'package:netflix_api/presentation/search/widget/search_idle.dart';
 import 'package:netflix_api/presentation/search/widget/title.dart';
 
 const imageURL = '/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg';
@@ -18,13 +17,13 @@ class SearchResultPage extends StatelessWidget {
       children: [
         Container(
             alignment: Alignment.topLeft,
-            child: TopTitleSearch(title: 'Movies & TV')),
+            child: const TopTitleSearch(title: 'Movies & TV')),
         kheight,
         Expanded(
             child: GridView.builder(
           shrinkWrap: true,
           itemCount: searchImgModel.results?.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               mainAxisSpacing: 10,
               crossAxisSpacing: 10,

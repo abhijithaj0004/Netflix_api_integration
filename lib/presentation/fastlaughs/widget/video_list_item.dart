@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:netflix_api/core/colors/colors.dart';
 import 'package:netflix_api/core/strings.dart';
 import 'package:netflix_api/domain/models/image_fact_repo/image_fact_repo.dart';
-import 'package:netflix_api/presentation/search/widget/search_result_page.dart';
 
 class VideoListItem extends StatelessWidget {
   final ImageFactModel imageFactModel;

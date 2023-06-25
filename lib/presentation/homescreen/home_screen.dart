@@ -4,7 +4,6 @@ import 'package:netflix_api/core/colors/colors.dart';
 import 'package:netflix_api/core/constants.dart';
 import 'package:netflix_api/core/strings.dart';
 import 'package:netflix_api/domain/models/image_fact_repo/image_fact_repo.dart';
-import 'package:netflix_api/presentation/downloads/downloads.dart';
 import 'package:netflix_api/presentation/homescreen/widgets/main_horizontal_list.dart';
 import 'package:netflix_api/presentation/homescreen/widgets/main_title.dart';
 import 'package:netflix_api/presentation/homescreen/widgets/number_card.dart';
