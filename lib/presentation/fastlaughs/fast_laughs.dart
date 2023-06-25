@@ -7,11 +7,14 @@ class FastLaughsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(body: PageView.builder(
+      child: Scaffold(
+          body: PageView.builder(
         scrollDirection: Axis.vertical,
         itemCount: 10,
         itemBuilder: (context, index) {
-          return VideoListItem(index: index,);
+          return VideoListItem(
+            index: index,
+          );
         },
       )),
     );

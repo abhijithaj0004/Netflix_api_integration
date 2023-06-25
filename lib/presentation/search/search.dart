@@ -34,7 +34,7 @@ class SearchScreen extends StatelessWidget {
               //   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               // ),
               kheight,
-              Expanded(child: SearchResultPage()),
+              Expanded(child: SearchIdleWidget()),
             ],
           ),
         ),

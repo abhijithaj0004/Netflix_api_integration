@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'downloadsModel.freezed.dart';
 part 'downloadsModel.g.dart';
+
 @freezed
 class DownloadsModel with _$DownloadsModel {
   const factory DownloadsModel({

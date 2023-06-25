@@ -1,94 +1,129 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:netflix_api/core/colors/colors.dart';
 import 'package:netflix_api/core/constants.dart';
+import 'package:netflix_api/core/strings.dart';
+import 'package:netflix_api/domain/models/image_fact_repo/image_fact_repo.dart';
 import 'package:netflix_api/presentation/downloads/downloads.dart';
 import 'package:netflix_api/presentation/homescreen/home_screen.dart';
-import 'package:netflix_api/presentation/mainwidgets/app_bar_widget.dart';
-import 'package:netflix_api/presentation/search/widget/search_idle.dart';
+import 'package:netflix_api/services/downloadServices/download_services.dart';
+import 'package:intl/date_symbol_data_custom.dart';
 
-class NewAndHotScreen extends StatelessWidget {
+class NewAndHotScreen extends StatefulWidget {
   const NewAndHotScreen({super.key});
 
   @override
+  State<NewAndHotScreen> createState() => _NewAndHotScreenState();
+}
+
+class _NewAndHotScreenState extends State<NewAndHotScreen> {
+  bool isloading = true;
+  late ImageFactModel imageFactModel;
+  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.black,
-              title: Text(
-                'New & Hot',
-                style: GoogleFonts.montserrat(
-                    textStyle:
-                        TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-              ),
-              actions: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.cast,
-                      size: 30,
-                      color: Colors.white,
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      imageFactModel = await DownloadServices().getDownloadsImages();
+      setState(() {
+        isloading = false;
+      });
+    });
+    return isloading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : SafeArea(
+            child: DefaultTabController(
+              length: 2,
+              child: Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Colors.black,
+                    title: Text(
+                      'New & Hot',
+                      style: GoogleFonts.montserrat(
+                          textStyle: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.bold)),
                     ),
-                    kWidth,
-                    Container(
-                      width: 25,
-                      height: 25,
-                      color: Colors.blue,
-                    ),
-                  ],
-                ),
-                kWidth,
-              ],
-              bottom: TabBar(
-                  unselectedLabelColor: kWhite,
-                  labelColor: Colors.black,
-                  labelStyle:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  indicator: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30)),
-                  tabs: [
-                    Tab(
-                      child: Text(
-                        '🍿Coming Soon',
+                    actions: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.cast,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                          kWidth,
+                          Container(
+                            width: 25,
+                            height: 25,
+                            color: Colors.blue,
+                          ),
+                        ],
                       ),
-                    ),
-                    Tab(
-                      child: Text("👀 Everyone's Watching"),
-                    )
-                  ]),
+                      kWidth,
+                    ],
+                    bottom: TabBar(
+                        unselectedLabelColor: kWhite,
+                        labelColor: Colors.black,
+                        labelStyle: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                        indicator: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30)),
+                        tabs: [
+                          Tab(
+                            child: Text(
+                              '🍿Coming Soon',
+                            ),
+                          ),
+                          Tab(
+                            child: Text("👀 Everyone's Watching"),
+                          )
+                        ]),
+                  ),
+                  body: TabBarView(
+                    children: [
+                      _buildComingSoon(imageFactModel),
+                      _buildEveryOnesWatching(imageFactModel),
+                    ],
+                  )),
             ),
-            body: TabBarView(
-              children: [
-                _buildComingSoon(),
-                _buildEveryOnesWatching(),
-              ],
-            )),
-      ),
-    );
+          );
   }
 }
 
-_buildComingSoon() {
+_buildComingSoon(ImageFactModel imageFactModel) {
   return ListView.builder(
     itemBuilder: (context, index) {
-      return comingSoonPageList();
+      return comingSoonPageList(
+        imageFactModel: imageFactModel,
+        index: index,
+      );
     },
-    itemCount: 3,
+    itemCount: imageFactModel.results?.length,
   );
 }
 
 class comingSoonPageList extends StatelessWidget {
+  final int index;
+  final ImageFactModel imageFactModel;
   const comingSoonPageList({
     super.key,
+    required this.imageFactModel,
+    required this.index,
   });
 
   @override
   Widget build(BuildContext context) {
+    List<String> date = (imageFactModel.results![index].firstAirDate == null)
+        ? ["2023", '05', '30']
+        : imageFactModel.results![index].firstAirDate!.split('-');
     final size = MediaQuery.of(context).size;
+    // final DateTime parsedDate =
+    //     DateTime.parse(imageFactModel.results![index].firstAirDate ?? 'Soon');
+    // final DateFormat formatter = DateFormat.MMMMEEEEd();
+    // final String convertedDate = formatter.format(parsedDate);
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -97,13 +132,13 @@ class comingSoonPageList extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'FEB',
+                returnMonth(date[1]),
                 style: TextStyle(
                     fontSize: 16,
                     color: const Color.fromARGB(255, 116, 115, 115)),
               ),
               Text(
-                '11',
+                date[2],
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               )
             ],
@@ -113,7 +148,7 @@ class comingSoonPageList extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: SizedBox(
             width: size.width - 50,
-            height: 500,
+            // height: 500,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -123,7 +158,9 @@ class comingSoonPageList extends StatelessWidget {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                         image: NetworkImage(
-                            'https://www.themoviedb.org/t/p/w533_and_h300_bestv2/wRxLAw4l17LqiFcPLkobriPTZAw.jpg'),
+                          '$kImgUrl${imageFactModel.results![index].backdropPath}' ??
+                              'https://www.themoviedb.org/t/p/w220_and_h330_face/7gKI9hpEMcZUQpNgKrkDzJpbnNS.jpg',
+                        ),
                         fit: BoxFit.cover),
                   ),
                   child: Align(
@@ -143,10 +180,16 @@ class comingSoonPageList extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'TALL GIRL 2',
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    SizedBox(
+                      child: Container(
+                        width: 200,
+                        child: Text(
+                          imageFactModel.results![index].name ?? 'Name error',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
                     IconTextButton(
                       title: 'Remind Me',
@@ -167,7 +210,7 @@ class comingSoonPageList extends StatelessWidget {
                 ),
                 kheight,
                 Text(
-                  'Coming on Friday',
+                  '${imageFactModel.results![index].firstAirDate ?? 'Coming soon'}',
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -175,12 +218,12 @@ class comingSoonPageList extends StatelessWidget {
                 ),
                 kheight,
                 Text(
-                  'Tall Girl 2',
+                  imageFactModel.results![index].name ?? 'Name error',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 kheight,
                 Text(
-                  'Landing the lead in the school musical is a \ndream come true for Jodi, until the pressure \nsends her confidence -- and her relationship--\ninto a tailspin.',
+                  imageFactModel.results![index].overview ?? 'Name error',
                   style: TextStyle(
                       color: Color.fromARGB(255, 124, 122, 122),
                       fontSize: 15,
@@ -194,25 +237,57 @@ class comingSoonPageList extends StatelessWidget {
       ],
     );
   }
+
+  String returnMonth(String month) {
+    switch (month) {
+      case '01':
+        return 'JAN';
+      case '02':
+        return 'FEB';
+      case '03':
+        return 'MAR';
+      case '04':
+        return 'APR';
+      case '05':
+        return 'MAY';
+      case '06':
+        return 'JUN';
+      case '07':
+        return 'JUL';
+      case '08':
+        return 'AUG';
+      case '09':
+        return 'JAN';
+      case '10':
+        return 'SEP';
+      case '11':
+        return 'OCT';
+      case '12':
+        return 'NOV';
+      default:
+        return '??';
+    }
+  }
 }
 
-_buildEveryOnesWatching() {
+_buildEveryOnesWatching(ImageFactModel imageFactModel) {
   return ListView.builder(
     itemBuilder: (context, index) {
       return EveryOnesWatchingList(
-        imgurl: imageList[index],
-      );
+          index: index, imageFactModel: imageFactModel);
     },
-    itemCount: 3,
+    itemCount: imageFactModel.results!.length,
   );
 }
 
 class EveryOnesWatchingList extends StatelessWidget {
-  final String imgurl;
+  final ImageFactModel imageFactModel;
+  final int index;
+
   const EveryOnesWatchingList({
     super.key,
-    this.imgurl =
-        'https://www.themoviedb.org/t/p/w250_and_h141_face/9n2tJBplPbgR2ca05hS5CKXwP2c.jpg',
+    required this.imageFactModel,
+    required this.index,
   });
 
   @override
@@ -224,12 +299,12 @@ class EveryOnesWatchingList extends StatelessWidget {
         children: [
           kheight,
           Text(
-            'Friends',
+            imageFactModel.results![index].name ?? 'Friends',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           kheight,
           Text(
-            'This hit sitcom follows the merry misadvantages of six 20-somthing pals as they navigate the pitfalls of \nwork, life and love in 1990s Manhattan.',
+            imageFactModel.results![index].overview ?? 'Name error',
             style: TextStyle(
                 color: Color.fromARGB(255, 124, 122, 122),
                 fontSize: 15,
@@ -244,7 +319,11 @@ class EveryOnesWatchingList extends StatelessWidget {
             height: 200,
             decoration: BoxDecoration(
               image: DecorationImage(
-                  image: NetworkImage(imgurl), fit: BoxFit.cover),
+                  image: NetworkImage(
+                    '$kImgUrl${imageFactModel.results![index].backdropPath}' ??
+                        'https://www.themoviedb.org/t/p/w220_and_h330_face/7gKI9hpEMcZUQpNgKrkDzJpbnNS.jpg',
+                  ),
+                  fit: BoxFit.cover),
             ),
             child: Align(
               alignment: Alignment.bottomRight,

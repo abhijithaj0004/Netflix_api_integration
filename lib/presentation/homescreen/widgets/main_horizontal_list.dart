@@ -6,7 +6,8 @@ import 'package:netflix_api/presentation/homescreen/widgets/main_title.dart';
 class MainHorizontalListWidget extends StatelessWidget {
   final String homeCardImg;
   final String title;
-  const MainHorizontalListWidget({super.key, required this.title, required this.homeCardImg});
+  const MainHorizontalListWidget(
+      {super.key, required this.title, required this.homeCardImg});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,9 @@ class MainHorizontalListWidget extends StatelessWidget {
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-              return MainCardWidget(HomeCardImg: homeCardImg,);
+              return MainCardWidget(
+                HomeCardImg: homeCardImg,
+              );
             },
             itemCount: 10,
           ),
