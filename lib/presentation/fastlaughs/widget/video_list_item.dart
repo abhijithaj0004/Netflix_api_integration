@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_api/core/colors/colors.dart';
+import 'package:netflix_api/core/strings.dart';
+import 'package:netflix_api/domain/models/image_fact_repo/image_fact_repo.dart';
 import 'package:netflix_api/presentation/search/widget/search_result_page.dart';
 
 class VideoListItem extends StatelessWidget {
+  final ImageFactModel imageFactModel;
   final int index;
-  const VideoListItem({super.key, required this.index});
+  const VideoListItem(
+      {super.key, required this.index, required this.imageFactModel});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Container(
-          color: Colors.accents[index],
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: NetworkImage(
+                      '$kImgUrl${imageFactModel.results![index].posterPath ?? 'https://www.themoviedb.org/t/p/w220_and_h330_face/7gKI9hpEMcZUQpNgKrkDzJpbnNS.jpg'}'),
+                  fit: BoxFit.cover)),
         ),
         Align(
           alignment: Alignment.bottomLeft,
@@ -38,7 +46,8 @@ class VideoListItem extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage(imageURL),
+                        backgroundImage: NetworkImage(
+                            '$kImgUrl${imageFactModel.results![index].posterPath ?? 'https://www.themoviedb.org/t/p/w220_and_h330_face/7gKI9hpEMcZUQpNgKrkDzJpbnNS.jpg'}'),
                         radius: 27,
                       ),
                     ),

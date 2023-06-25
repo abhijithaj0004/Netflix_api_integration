@@ -8,12 +8,6 @@ import 'package:netflix_api/domain/models/image_fact_repo/image_fact_repo.dart';
 import 'package:netflix_api/presentation/mainwidgets/app_bar_widget.dart';
 import 'package:netflix_api/services/downloadServices/download_services.dart';
 
-final imageList = [
-  'https://www.themoviedb.org/t/p/w220_and_h330_face/7gKI9hpEMcZUQpNgKrkDzJpbnNS.jpg',
-  'https://www.themoviedb.org/t/p/w220_and_h330_face/fiVW06jE7z9YnO4trhaMEdclSiC.jpg',
-  'https://www.themoviedb.org/t/p/w220_and_h330_face/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg',
-];
-
 class DownloadsScreen extends StatefulWidget {
   DownloadsScreen({super.key});
 
@@ -23,11 +17,6 @@ class DownloadsScreen extends StatefulWidget {
 
 class _DownloadsScreenState extends State<DownloadsScreen> {
   bool isLoading = true;
-  // final _widgetList = [
-  //   const _SmartDownloads(),
-  //   Section2(),
-  //   Section3(),
-  // ];
   late ImageFactModel imageFactModel;
   @override
   Widget build(BuildContext context) {

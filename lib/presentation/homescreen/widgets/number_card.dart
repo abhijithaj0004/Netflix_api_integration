@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:netflix_api/core/constants.dart';
-import 'package:netflix_api/presentation/homescreen/widgets/main_title.dart';
-import 'package:netflix_api/presentation/search/widget/search_idle.dart';
+import 'package:netflix_api/core/strings.dart';
+import 'package:netflix_api/domain/models/image_fact_repo/image_fact_repo.dart';
 import 'package:outlined_text/outlined_text.dart';
 
 class NumberCardWidget extends StatelessWidget {
-  const NumberCardWidget({super.key, required this.index});
+  final ImageFactModel imageFactModel;
+  const NumberCardWidget(
+      {super.key, required this.index, required this.imageFactModel});
   final int index;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Stack(
       children: [
         Row(
@@ -27,7 +26,9 @@ class NumberCardWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 image: DecorationImage(
-                    image: NetworkImage(imageUrl), fit: BoxFit.cover),
+                    image: NetworkImage(
+                        '$kImgUrl${imageFactModel.results![index].posterPath ?? ''}'),
+                    fit: BoxFit.cover),
               ),
             ),
           ],

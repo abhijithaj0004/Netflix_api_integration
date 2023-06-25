@@ -11,8 +11,8 @@ class ImageFactModel {
   ImageFactModel({this.results});
 
   factory ImageFactModel.fromJson(Map<String, dynamic> json) {
-    return _$ImageFactRepoFromJson(json);
+    return _$ImageFactModelFromJson(json);
   }
 
-  Map<String, dynamic> toJson() => _$ImageFactRepoToJson(this);
+  Map<String, dynamic> toJson() => _$ImageFactModelToJson(this);
 }

@@ -9,6 +9,7 @@ part of 'result.dart';
 Result _$ResultFromJson(Map<String, dynamic> json) => Result(
       backdropPath: json['backdrop_path'] as String?,
       name: json['name'] as String?,
+      title: json['title'] as String?,
       originalName: json['original_name'] as String?,
       overview: json['overview'] as String?,
       posterPath: json['poster_path'] as String?,
@@ -18,6 +19,7 @@ Result _$ResultFromJson(Map<String, dynamic> json) => Result(
 Map<String, dynamic> _$ResultToJson(Result instance) => <String, dynamic>{
       'backdrop_path': instance.backdropPath,
       'name': instance.name,
+      'title': instance.title,
       'original_name': instance.originalName,
       'overview': instance.overview,
       'poster_path': instance.posterPath,

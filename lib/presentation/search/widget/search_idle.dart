@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_api/core/constants.dart';
+import 'package:netflix_api/core/strings.dart';
+import 'package:netflix_api/domain/models/image_fact_repo/image_fact_repo.dart';
 import 'package:netflix_api/presentation/search/widget/title.dart';
 
 final imageUrl =
     'https://www.themoviedb.org/t/p/w250_and_h141_face/9n2tJBplPbgR2ca05hS5CKXwP2c.jpg';
 
 class SearchIdleWidget extends StatelessWidget {
-  const SearchIdleWidget({super.key});
+  final ImageFactModel imageFactModel;
+  const SearchIdleWidget({super.key, required this.imageFactModel});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,10 @@ class SearchIdleWidget extends StatelessWidget {
         Expanded(
           child: ListView.separated(
             shrinkWrap: true,
-            itemBuilder: (context, index) => TopSearch(),
+            itemBuilder: (context, index) => TopSearch(
+              index: index,
+              imageFactModel: imageFactModel,
+            ),
             separatorBuilder: (context, index) => SizedBox(
               height: 10,
             ),
@@ -34,7 +40,10 @@ class SearchIdleWidget extends StatelessWidget {
 }
 
 class TopSearch extends StatelessWidget {
-  const TopSearch({super.key});
+  final int index;
+  final ImageFactModel imageFactModel;
+  const TopSearch(
+      {super.key, required this.imageFactModel, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +57,17 @@ class TopSearch extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             image: DecorationImage(
-                fit: BoxFit.cover, image: NetworkImage(imageUrl)),
+                fit: BoxFit.cover,
+                image: NetworkImage(
+                    '$kImgUrl${imageFactModel.results![index].backdropPath ?? 'https://www.themoviedb.org/t/p/w220_and_h330_face/7gKI9hpEMcZUQpNgKrkDzJpbnNS.jpg'}')),
           ),
         ),
         SizedBox(
           width: screenWidth * 0.3,
           child: Text(
-            'Movie Name',
+            (imageFactModel.results![index].title == null)
+                ? imageFactModel.results![index].name ?? 'Name error'
+                : imageFactModel.results![index].title ?? 'Name error',
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),

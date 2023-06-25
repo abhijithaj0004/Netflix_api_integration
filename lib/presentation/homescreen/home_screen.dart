@@ -2,186 +2,213 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:netflix_api/core/colors/colors.dart';
 import 'package:netflix_api/core/constants.dart';
+import 'package:netflix_api/core/strings.dart';
+import 'package:netflix_api/domain/models/image_fact_repo/image_fact_repo.dart';
 import 'package:netflix_api/presentation/downloads/downloads.dart';
 import 'package:netflix_api/presentation/homescreen/widgets/main_horizontal_list.dart';
 import 'package:netflix_api/presentation/homescreen/widgets/main_title.dart';
 import 'package:netflix_api/presentation/homescreen/widgets/number_card.dart';
+import 'package:netflix_api/services/downloadServices/download_services.dart';
 
 ValueNotifier<bool> ScrollNotifier = ValueNotifier(true);
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool isLoading = true;
+  late ImageFactModel imageFactModel;
+  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          body: ValueListenableBuilder(
-              valueListenable: ScrollNotifier,
-              builder: (context, index, _) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: NotificationListener<UserScrollNotification>(
-                    onNotification: (notification) {
-                      final ScrollDirection direction = notification.direction;
-                      if (direction == ScrollDirection.reverse) {
-                        ScrollNotifier.value = false;
-                      } else if (direction == ScrollDirection.forward) {
-                        ScrollNotifier.value = true;
-                      }
-                      return true;
-                    },
-                    child: Stack(
-                      children: [
-                        ListView(
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      imageFactModel = await DownloadServices().getDownloadsImages();
+      setState(() {
+        isLoading = false;
+      });
+    });
+    return isLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : SafeArea(
+            child: Scaffold(
+                body: ValueListenableBuilder(
+                    valueListenable: ScrollNotifier,
+                    builder: (context, index, _) {
+                      return NotificationListener<UserScrollNotification>(
+                        onNotification: (notification) {
+                          final ScrollDirection direction =
+                              notification.direction;
+                          if (direction == ScrollDirection.reverse) {
+                            ScrollNotifier.value = false;
+                          } else if (direction == ScrollDirection.forward) {
+                            ScrollNotifier.value = true;
+                          }
+                          return true;
+                        },
+                        child: Stack(
                           children: [
-                            Stack(
+                            ListView(
                               children: [
-                                Container(
-                                  width: double.infinity,
-                                  height: 600,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: NetworkImage(
-                                            'https://www.themoviedb.org/t/p/w220_and_h330_face/821PHm9tLaoVJFgGfUoIJQTX0nx.jpg'),
-                                        fit: BoxFit.cover),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  left: 0,
-                                  right: 0,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      IconTextButton(
-                                        icon: Icons.add,
-                                        title: 'My List',
-                                      ),
-                                      playButton(),
-                                      IconTextButton(
-                                        icon: Icons.info_outline,
-                                        title: 'Info',
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                            kheight,
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                MainHorizontalListWidget(
-                                  title: 'Released in the past',
-                                  homeCardImg: imageList[2],
-                                ),
-                                MainHorizontalListWidget(
-                                    title: 'Trending Now',
-                                    homeCardImg: imageList[1]),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                Stack(
                                   children: [
-                                    MainTitle(
-                                        title:
-                                            'Top 10 TV shows in India Today'),
-                                    kheight,
-                                    LimitedBox(
-                                      maxHeight: 240,
-                                      child: ListView.separated(
-                                        separatorBuilder: (context, index) =>
-                                            SizedBox(
-                                          width: 10,
-                                        ),
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (context, index) {
-                                          return NumberCardWidget(
-                                              index: index + 1);
-                                        },
-                                        itemCount: 10,
+                                    Container(
+                                      width: double.infinity,
+                                      height: 600,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                '$kImgUrl${imageFactModel.results![1].posterPath}'),
+                                            fit: BoxFit.cover),
                                       ),
                                     ),
-                                    kheight,
-                                  ],
-                                ),
-                                MainHorizontalListWidget(
-                                  title: 'Tense Dramas',
-                                  homeCardImg: imageList[0],
-                                ),
-                                MainHorizontalListWidget(
-                                  title: 'south Indian Cinema',
-                                  homeCardImg: imageList[2],
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                        ScrollNotifier.value
-                            ? SizedBox(
-                                width: double.infinity,
-                                height: 100,
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
+                                    Positioned(
+                                      bottom: 0,
+                                      left: 0,
+                                      right: 0,
                                       child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          Image.asset(
-                                            'assets/images/netflix.png',
-                                            width: 60,
+                                          IconTextButton(
+                                            icon: Icons.add,
+                                            title: 'My List',
                                           ),
-                                          const Spacer(),
-                                          const Icon(
-                                            Icons.cast,
-                                            color: kWhite,
-                                          ),
-                                          kWidth,
-                                          Container(
-                                            width: 25,
-                                            height: 25,
-                                            color: Colors.blue,
+                                          playButton(),
+                                          IconTextButton(
+                                            icon: Icons.info_outline,
+                                            title: 'Info',
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                    )
+                                  ],
+                                ),
+                                kheight,
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      MainHorizontalListWidget(
+                                        imageFactModel: imageFactModel,
+                                        title: 'Released in the past',
+                                      ),
+                                      MainHorizontalListWidget(
+                                        imageFactModel: imageFactModel,
+                                        title: 'Trending Now',
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          MainTitle(
+                                              title:
+                                                  'Top 10 TV shows in India Today'),
+                                          kheight,
+                                          LimitedBox(
+                                            maxHeight: 240,
+                                            child: ListView.separated(
+                                              separatorBuilder:
+                                                  (context, index) => SizedBox(
+                                                width: 10,
+                                              ),
+                                              shrinkWrap: true,
+                                              scrollDirection: Axis.horizontal,
+                                              itemBuilder: (context, index) {
+                                                return NumberCardWidget(
+                                                    imageFactModel:
+                                                        imageFactModel,
+                                                    index: index + 1);
+                                              },
+                                              itemCount: 10,
+                                            ),
+                                          ),
+                                          kheight,
+                                        ],
+                                      ),
+                                      MainHorizontalListWidget(
+                                        imageFactModel: imageFactModel,
+                                        title: 'Tense Dramas',
+                                      ),
+                                      MainHorizontalListWidget(
+                                        imageFactModel: imageFactModel,
+                                        title: 'south Indian Cinema',
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            ScrollNotifier.value
+                                ? SizedBox(
+                                    width: double.infinity,
+                                    height: 100,
+                                    child: Column(
                                       children: [
-                                        Text(
-                                          'TV Shows',
-                                          style: textHomeBar,
-                                        ),
-                                        Text(
-                                          'Movies',
-                                          style: textHomeBar,
+                                        Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Row(
+                                            children: [
+                                              Image.asset(
+                                                'assets/images/netflix.png',
+                                                width: 60,
+                                              ),
+                                              const Spacer(),
+                                              const Icon(
+                                                Icons.cast,
+                                                color: kWhite,
+                                              ),
+                                              kWidth,
+                                              Container(
+                                                width: 25,
+                                                height: 25,
+                                                color: Colors.blue,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
                                             Text(
-                                              'Categories',
+                                              'TV Shows',
                                               style: textHomeBar,
                                             ),
-                                            Icon(
-                                              Icons.arrow_drop_down,
-                                              color: kWhite,
+                                            Text(
+                                              'Movies',
+                                              style: textHomeBar,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Categories',
+                                                  style: textHomeBar,
+                                                ),
+                                                Icon(
+                                                  Icons.arrow_drop_down,
+                                                  color: kWhite,
+                                                )
+                                              ],
                                             )
                                           ],
                                         )
                                       ],
-                                    )
-                                  ],
-                                ),
-                              )
-                            : kheight
-                      ],
-                    ),
-                  ),
-                );
-              })),
-    );
+                                    ),
+                                  )
+                                : kheight
+                          ],
+                        ),
+                      );
+                    })),
+          );
   }
 
   TextButton playButton() {

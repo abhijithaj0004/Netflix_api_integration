@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:netflix_api/core/colors/colors.dart';
 import 'package:netflix_api/core/constants.dart';
 import 'package:netflix_api/core/strings.dart';
 import 'package:netflix_api/domain/models/image_fact_repo/image_fact_repo.dart';
-import 'package:netflix_api/presentation/downloads/downloads.dart';
 import 'package:netflix_api/presentation/homescreen/home_screen.dart';
 import 'package:netflix_api/services/downloadServices/download_services.dart';
-import 'package:intl/date_symbol_data_custom.dart';
 
 class NewAndHotScreen extends StatefulWidget {
   const NewAndHotScreen({super.key});
@@ -184,7 +181,11 @@ class comingSoonPageList extends StatelessWidget {
                       child: Container(
                         width: 200,
                         child: Text(
-                          imageFactModel.results![index].name ?? 'Name error',
+                          (imageFactModel.results![index].title == null)
+                              ? imageFactModel.results![index].name ??
+                                  'Name error'
+                              : imageFactModel.results![index].title ??
+                                  'Name error',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontSize: 30, fontWeight: FontWeight.bold),
@@ -218,7 +219,9 @@ class comingSoonPageList extends StatelessWidget {
                 ),
                 kheight,
                 Text(
-                  imageFactModel.results![index].name ?? 'Name error',
+                  (imageFactModel.results![index].title == null)
+                      ? imageFactModel.results![index].name ?? 'Name error'
+                      : imageFactModel.results![index].title ?? 'Name error',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 kheight,
@@ -299,7 +302,9 @@ class EveryOnesWatchingList extends StatelessWidget {
         children: [
           kheight,
           Text(
-            imageFactModel.results![index].name ?? 'Friends',
+            (imageFactModel.results![index].title == null)
+                ? imageFactModel.results![index].name ?? 'Name error'
+                : imageFactModel.results![index].title ?? 'Name error',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           kheight,

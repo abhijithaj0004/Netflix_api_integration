@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:netflix_api/core/strings.dart';
+import 'package:netflix_api/domain/models/image_fact_repo/image_fact_repo.dart';
 
 class MainCardWidget extends StatelessWidget {
-  final String HomeCardImg;
-  const MainCardWidget({super.key, required this.HomeCardImg});
+  final int index;
+  final ImageFactModel imageFactModel;
+  const MainCardWidget(
+      {super.key, required this.imageFactModel, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,9 @@ class MainCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           image: DecorationImage(
-              image: NetworkImage(HomeCardImg), fit: BoxFit.cover)),
+              image: NetworkImage(
+                  '$kImgUrl${imageFactModel.results![index].posterPath ?? ''}'),
+              fit: BoxFit.cover)),
     );
   }
 }

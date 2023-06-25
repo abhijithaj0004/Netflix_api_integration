@@ -8,6 +8,8 @@ class Result {
   String? backdropPath;
   @JsonKey(name: 'name')
   String? name;
+  @JsonKey(name: 'title')
+  String? title;
   @JsonKey(name: 'original_name')
   String? originalName;
   @JsonKey(name: 'overview')
@@ -20,6 +22,7 @@ class Result {
   Result({
     this.backdropPath,
     this.name,
+    this.title,
     this.originalName,
     this.overview,
     this.posterPath,

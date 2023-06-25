@@ -4,7 +4,7 @@ import 'package:netflix_api/domain/downloads/i_download_repo.dart';
 
 import 'package:netflix_api/domain/models/image_fact_repo/image_fact_repo.dart';
 
-class DownloadServices extends IDownloadsRepo{
+class DownloadServices extends IDownloadsRepo {
   Dio dio = Dio();
   @override
   Future<ImageFactModel> getDownloadsImages() async {
@@ -15,6 +15,4 @@ class DownloadServices extends IDownloadsRepo{
       return ImageFactModel(results: []);
     }
   }
-
-  
 }

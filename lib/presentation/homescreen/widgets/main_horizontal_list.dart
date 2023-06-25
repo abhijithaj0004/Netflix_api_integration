@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_api/core/constants.dart';
+import 'package:netflix_api/domain/models/image_fact_repo/image_fact_repo.dart';
 import 'package:netflix_api/presentation/homescreen/widgets/main_card.dart';
 import 'package:netflix_api/presentation/homescreen/widgets/main_title.dart';
 
 class MainHorizontalListWidget extends StatelessWidget {
-  final String homeCardImg;
+  final ImageFactModel imageFactModel;
+
   final String title;
   const MainHorizontalListWidget(
-      {super.key, required this.title, required this.homeCardImg});
+      {super.key, required this.title, required this.imageFactModel});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,8 @@ class MainHorizontalListWidget extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               return MainCardWidget(
-                HomeCardImg: homeCardImg,
+                index: index,
+                imageFactModel: imageFactModel,
               );
             },
             itemCount: 10,
